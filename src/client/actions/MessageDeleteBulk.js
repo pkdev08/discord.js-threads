@@ -4,10 +4,13 @@ const Action = require('./Action');
 const Collection = require('../../util/Collection');
 const { Events } = require('../../util/Constants');
 
+const channelTypes = ['text', 'news', 'dm'];
+
 class MessageDeleteBulkAction extends Action {
   handle(data) {
     const client = this.client;
     const channel = client.channels.cache.get(data.channel_id);
+    if (!channelTypes.includes(channel.type)) return {};
 
     if (channel) {
       const ids = data.ids;

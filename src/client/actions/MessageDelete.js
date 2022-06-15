@@ -3,10 +3,14 @@
 const Action = require('./Action');
 const { Events } = require('../../util/Constants');
 
+const channelTypes = ['text', 'news', 'dm'];
+
 class MessageDeleteAction extends Action {
   handle(data) {
     const client = this.client;
     const channel = this.getChannel(data);
+    if (!channelTypes.includes(channel.type)) return {};
+
     let message;
     if (channel) {
       message = this.getMessage(data, channel);

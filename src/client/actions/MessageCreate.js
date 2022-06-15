@@ -3,12 +3,16 @@
 const Action = require('./Action');
 const { Events } = require('../../util/Constants');
 
+const channelTypes = ['text', 'news', 'dm'];
+
 let deprecationEmitted = false;
 
 class MessageCreateAction extends Action {
   handle(data) {
     const client = this.client;
     const channel = this.getChannel(data);
+    if (!channelTypes.includes(channel.type)) return {};
+    
     if (channel) {
       const existing = channel.messages.cache.get(data.id);
       if (existing) return { message: existing };
