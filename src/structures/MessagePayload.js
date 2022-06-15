@@ -208,6 +208,37 @@ class MessagePayload {
   }
 
   /**
+   * Converts this MessagePayload into an array of MessagePayloads for each split content
+   * @returns {MessagePayload[]}
+   */
+   split() {
+    if (!this.data) this.resolveData();
+
+    if (!Array.isArray(this.data.content)) return [this];
+
+    const messagePayloads = [];
+
+    for (let i = 0; i < this.data.content.length; i++) {
+      let data;
+      let opt;
+
+      if (i === this.data.content.length - 1) {
+        data = { ...this.data, content: this.data.content[i] };
+        opt = { ...this.options, content: this.data.content[i] };
+      } else {
+        data = { content: this.data.content[i], tts: this.data.tts, allowed_mentions: this.options.allowedMentions };
+        opt = { content: this.data.content[i], tts: this.data.tts, allowedMentions: this.options.allowedMentions };
+      }
+
+      const messagePayload = new MessagePayload(this.target, opt);
+      messagePayload.data = data;
+      messagePayloads.push(messagePayload);
+    }
+
+    return messagePayloads;
+  }
+
+  /**
    * Resolves a single file into an object sendable to the API.
    * @param {BufferResolvable|Stream|FileOptions|MessageAttachment} fileLike Something that could be resolved to a file
    * @returns {MessageFile}

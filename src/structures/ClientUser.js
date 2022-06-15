@@ -1,13 +1,13 @@
 'use strict';
 
-const User = require('./User');
+const Structures = require('../util/Structures');
 const DataResolver = require('../util/DataResolver');
 
 /**
  * Represents the logged in client's Discord user.
  * @extends {User}
  */
-class ClientUser extends User {
+class ClientUser extends Structures.get('User') {
   _patch(data) {
     super._patch(data);
 
